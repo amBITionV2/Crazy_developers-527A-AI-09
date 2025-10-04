@@ -7,6 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { BloodCells } from '@/components/BloodCells';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { VoiceAssistant } from '@/components/VoiceAssistant';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,6 +15,10 @@ export const DonorDashboard = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('health');
+  const [scheduledRequests, setScheduledRequests] = useState([
+    { patient: 'Thalassemia Patient', hospital: 'Children\'s Hospital', date: '2024-11-05', status: 'pending' },
+    { patient: 'Dialysis Patient', hospital: 'Kidney Care Center', date: '2024-11-12', status: 'pending' },
+  ]);
 
   const healthScore = 85;
 
@@ -92,12 +97,24 @@ export const DonorDashboard = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-4 mt-6">
                     <div className="text-center p-4 bg-background/50 rounded-lg">
-                      <div className="text-2xl font-bold">120/80</div>
+                      <div className="text-2xl font-bold text-primary">120/80</div>
                       <div className="text-sm text-muted-foreground">Blood Pressure</div>
+                      <Badge className="mt-2 bg-primary">Normal</Badge>
                     </div>
                     <div className="text-center p-4 bg-background/50 rounded-lg">
-                      <div className="text-2xl font-bold">14.5</div>
+                      <div className="text-2xl font-bold text-primary">14.5</div>
                       <div className="text-sm text-muted-foreground">Hemoglobin (g/dL)</div>
+                      <Badge className="mt-2 bg-primary">Normal</Badge>
+                    </div>
+                    <div className="text-center p-4 bg-background/50 rounded-lg">
+                      <div className="text-2xl font-bold text-primary">95</div>
+                      <div className="text-sm text-muted-foreground">Sugar (mg/dL)</div>
+                      <Badge className="mt-2 bg-primary">Normal</Badge>
+                    </div>
+                    <div className="text-center p-4 bg-background/50 rounded-lg">
+                      <div className="text-2xl font-bold text-primary">72</div>
+                      <div className="text-sm text-muted-foreground">Heart Rate (bpm)</div>
+                      <Badge className="mt-2 bg-primary">Normal</Badge>
                     </div>
                   </div>
                 </CardContent>
@@ -168,24 +185,49 @@ export const DonorDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {[
-                    { patient: 'Thalassemia Patient', hospital: 'Children\'s Hospital', date: '2024-11-05', status: 'pending' },
-                    { patient: 'Dialysis Patient', hospital: 'Kidney Care Center', date: '2024-11-12', status: 'pending' },
-                  ].map((schedule, index) => (
-                    <div key={index} className="p-4 bg-background/50 rounded-lg border border-primary/10">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <h4 className="font-semibold">{schedule.patient}</h4>
-                          <p className="text-sm text-muted-foreground">{schedule.hospital}</p>
+                  {scheduledRequests.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">No scheduled donations</p>
+                  ) : (
+                    scheduledRequests.map((schedule, index) => (
+                      <div key={index} className="p-4 bg-background/50 rounded-lg border border-primary/10">
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <h4 className="font-semibold">{schedule.patient}</h4>
+                            <p className="text-sm text-muted-foreground">{schedule.hospital}</p>
+                          </div>
+                          <Badge variant="outline">{schedule.date}</Badge>
                         </div>
-                        <Badge variant="outline">{schedule.date}</Badge>
+                        {schedule.status === 'pending' && (
+                          <div className="flex gap-2">
+                            <Button 
+                              size="sm" 
+                              className="bg-primary hover:bg-primary/90"
+                              onClick={() => {
+                                const updated = [...scheduledRequests];
+                                updated[index].status = 'accepted';
+                                setScheduledRequests(updated);
+                              }}
+                            >
+                              Accept
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="border-primary/20"
+                              onClick={() => {
+                                setScheduledRequests(scheduledRequests.filter((_, i) => i !== index));
+                              }}
+                            >
+                              Decline
+                            </Button>
+                          </div>
+                        )}
+                        {schedule.status === 'accepted' && (
+                          <Badge className="bg-primary">Accepted</Badge>
+                        )}
                       </div>
-                      <div className="flex gap-2">
-                        <Button size="sm" className="bg-primary hover:bg-primary/90">Accept</Button>
-                        <Button size="sm" variant="outline" className="border-primary/20">Decline</Button>
-                      </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -200,15 +242,15 @@ export const DonorDashboard = () => {
               <CardContent>
                 <div className="space-y-4">
                   {[
-                    { patient: 'Emergency Case #1', hospital: 'Trauma Center', bloodGroup: 'O+', distance: '2.3 km', urgency: 'Critical' },
-                    { patient: 'Emergency Case #2', hospital: 'City Hospital', bloodGroup: 'O+', distance: '4.1 km', urgency: 'High' },
+                    { patient: 'Emergency Case #1', hospital: 'Trauma Center', bloodGroup: 'O+', distance: '2.3 km', urgency: 'Critical', area: 'Jayanagar' },
+                    { patient: 'Emergency Case #2', hospital: 'City Hospital', bloodGroup: 'O+', distance: '4.1 km', urgency: 'High', area: 'Koramangala' },
                   ].map((emergency, index) => (
                     <div key={index} className="p-4 bg-destructive/10 rounded-lg border border-destructive/20 animate-pulse-glow">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <h4 className="font-semibold text-destructive">{emergency.patient}</h4>
                           <p className="text-sm text-muted-foreground">{emergency.hospital}</p>
-                          <p className="text-sm mt-1">Distance: {emergency.distance}</p>
+                          <p className="text-sm mt-1">📍 {emergency.area} • {emergency.distance}</p>
                         </div>
                         <div className="text-right">
                           <Badge className="bg-destructive mb-2">{emergency.bloodGroup}</Badge>
@@ -216,7 +258,20 @@ export const DonorDashboard = () => {
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <Button size="sm" className="bg-destructive hover:bg-destructive/90">Accept</Button>
+                        <Button 
+                          size="sm" 
+                          className="bg-destructive hover:bg-destructive/90"
+                          onClick={() => {
+                            setScheduledRequests([...scheduledRequests, {
+                              patient: emergency.patient,
+                              hospital: emergency.hospital,
+                              date: new Date().toISOString().split('T')[0],
+                              status: 'accepted'
+                            }]);
+                          }}
+                        >
+                          Accept
+                        </Button>
                         <Button size="sm" variant="outline" className="border-destructive/20">Decline</Button>
                       </div>
                     </div>
@@ -294,6 +349,8 @@ export const DonorDashboard = () => {
           </TabsContent>
         </Tabs>
       </div>
+      
+      <VoiceAssistant />
     </div>
   );
 };
