@@ -7,8 +7,10 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Landing } from "./pages/Landing";
 import { SelectUser } from "./pages/SelectUser";
 import { DonorRegister } from "./pages/donor/DonorRegister";
+import { DonorLogin } from "./pages/donor/DonorLogin";
 import { DonorDashboard } from "./pages/donor/DonorDashboard";
 import { PatientRegister } from "./pages/patient/PatientRegister";
+import { PatientLogin } from "./pages/patient/PatientLogin";
 import { PatientDashboard } from "./pages/patient/PatientDashboard";
 import NotFound from "./pages/NotFound";
 
@@ -25,8 +27,10 @@ const App = () => (
             <Route path="/" element={<Landing />} />
             <Route path="/select-user" element={<SelectUser />} />
             <Route path="/donor/register" element={<DonorRegister />} />
+            <Route path="/donor/login" element={<DonorLogin />} />
             <Route path="/donor/dashboard" element={<DonorDashboard />} />
             <Route path="/patient/register" element={<PatientRegister />} />
+            <Route path="/patient/login" element={<PatientLogin />} />
             <Route path="/patient/dashboard" element={<PatientDashboard />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
