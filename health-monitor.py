@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 class HealthMonitor:
     def __init__(self):
-        self.backend_url = "http://localhost:8003"
+        self.backend_url = "http://127.0.0.1:8000"
         self.frontend_url = "http://localhost:5173"
         self.check_interval = 60  # Check every 60 seconds
         self.max_failures = 3  # Restart after 3 consecutive failures

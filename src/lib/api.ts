@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 
 // Create axios instance with base configuration
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8003/api/v1',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -530,7 +530,7 @@ export const chatAPI = {
 
 // Health check
 export const healthCheck = async (): Promise<{ status: string; service: string; version: string }> => {
-  const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL?.replace('/api/v1', '') || 'http://localhost:8001'}/health`);
+  const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL?.replace('/api/v1', '') || 'http://127.0.0.1:8000'}/health`);
   return response.data;
 };
 
